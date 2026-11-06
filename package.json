@@ -1,0 +1,92 @@
+{
+  "name": "localsendplus",
+  "productName": "localsendplus",
+  "version": "1.4.0",
+  "description": "LocalSendPlus - send files, folders, text and clipboard across your LAN and routed VPN networks (LocalSend protocol v2.2). Installer, portable and web editions for Windows x64 and Arm64.",
+  "main": "main.js",
+  "author": "Mark Loudon",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/e2e.js && node test/web.js",
+    "test:ui": "electron . --uitest",
+    "cli": "node bin/localsendplus.js",
+    "web": "node web/server.js --open",
+    "icons": "electron scripts/make-icons.js",
+    "package": "node scripts/package.js",
+    "installer": "electron-builder --win nsis --x64",
+    "portable-exe": "electron-builder --win portable --x64",
+    "package-web": "node scripts/package-web.js",
+    "release": "npm run package && npm run package:arm64 && npm run portable-exe && npm run portable-exe:arm64 && npm run installer && npm run installer:arm64 && npm run package-web && npm run package-web:arm64",
+    "package:arm64": "node scripts/package.js arm64",
+    "installer:arm64": "electron-builder --win nsis --arm64",
+    "portable-exe:arm64": "electron-builder --win portable --arm64",
+    "package-web:arm64": "node scripts/package-web.js arm64"
+  },
+  "dependencies": {
+    "qrcode": "1.5.4",
+    "selfsigned": "2.4.1"
+  },
+  "devDependencies": {
+    "@electron/packager": "^18.4.4",
+    "electron": "45.1.0",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "com.markloudon.localsendplus",
+    "productName": "localsendplus",
+    "directories": {
+      "buildResources": "build",
+      "output": "dist-installer"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "bin/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "asar": true,
+    "win": {
+      "artifactName": "localsendplus-setup-${version}-${arch}.${ext}",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "perMachine": true,
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "include": "build/installer.nsh",
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": true,
+      "createStartMenuShortcut": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "localsendplus"
+    },
+    "extraFiles": [
+      {
+        "from": "build/localsendplus-cli.cmd",
+        "to": "localsendplus-cli.cmd"
+      }
+    ],
+    "portable": {
+      "artifactName": "localsendplus-portable-${version}-${arch}.exe"
+    }
+  },
+  "bin": {
+    "localsendplus": "bin/localsendplus.js"
+  },
+  "homepage": "https://github.com/loudy69/localsendplus",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loudy69/localsendplus.git"
+  }
+}

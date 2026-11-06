@@ -1,0 +1,9 @@
+node_modules/
+dist/
+dist-installer/
+release/
+build/node-*/
+data/
+Received/
+uitest-result.txt
+
